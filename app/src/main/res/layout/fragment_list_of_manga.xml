@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_list_of_manga"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="8dp"
+        android:saveEnabled="true"
+        app:layout_anchorGravity="bottom"
+        tools:listitem="@layout/crd_view_item" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/item_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/searchbtn_bg">
+
+        <TextView
+            android:id="@+id/searchbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/searchtxt"
+            android:layout_marginStart="48dp"
+            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:gravity="center"/>
+
+    </androidx.appcompat.widget.Toolbar>
+</FrameLayout>

@@ -1,0 +1,80 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/background_material_dark</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
+        <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
+        <item name="android:colorBackground">@color/background_material_dark</item>
+        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
+        <item name="colorBackgroundFloating">@color/background_floating_material_dark</item>
+<!--        <item name="android:windowLightStatusBar">true</item>-->
+    </style>
+
+    <style name="CustomAppBarStyle" parent="Base.Widget.AppCompat.Light.ActionBar.TabText">
+        <item name="android:radius">5dp</item>
+        <item name="android:colorBackground">@color/colorAccent</item>
+    </style>
+
+
+
+    <style name="CustomAnimationButton" parent="@style/Widget.AppCompat.Button">
+        <item name="colorButtonNormal">#1a237e</item>
+        <item name="colorControlHighlight">#673ab7</item>
+    </style>
+
+    <style name="MyRatingBar.Small" parent="Base.Widget.AppCompat.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/abc_ratingbar_small_material</item>
+        <item name="android:indeterminateDrawable">@drawable/abc_ratingbar_small_material</item>
+        <item name="android:minHeight">10dip</item>
+        <item name="android:maxHeight">10dip</item>
+        <item name="android:isIndicator">true</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Material.Dialog">
+        <item name="android:textColor">@android:color/white</item>
+<!--        <item name="android:textColorLink">@android:color/white</item>-->
+<!--        <item name="android:textColorSecondary">@color/colorWhite</item>-->
+<!--        <item name="android:textColorAlertDialogListItem">@color/colorWhite</item>-->
+<!--        <item name="android:textColorPrimary">@color/colorWhite</item>-->
+<!--        <item name="android:textColorTertiary">@color/colorWhite</item>-->
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:background">#3687C8</item>
+    </style>
+
+    <style name="ToolBarWithNavigationBack">
+        <item name="navigationIcon">@drawable/abc_ic_ab_back_material</item>
+        <item name="icon">@drawable/logo_r_m</item>
+    </style>
+
+    <style name="CollapsingTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <style name="CollapsingTextAppearance.Inverse" >
+        <item name="android:textSize">30sp</item>
+        <item name="android:layout_marginStart">10dp</item>
+    </style>
+
+    <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
+    <style name="TextAppearance.Header">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?colorAccent</item>
+    </style>
+
+    <style name="TextComponent"/>
+
+    <style name="TextComponent.ItemRow">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="ToolBarBetter" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorBackground">@color/Yellow</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="android:backgroundTint">@color/colorWhite</item>
+    </style>
+
+
+
+
+</resources>
