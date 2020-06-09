@@ -12,7 +12,6 @@ import com.sale.readmanga.adapters.MangaListAdapter
 import com.sale.readmanga.data.Manga
 import com.sale.readmanga.noname.addOnScrolledToEnd
 import kotlinx.android.synthetic.main.fragment_list_of_manga.*
-import kotlinx.android.synthetic.main.item_progress_bar.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,11 +32,9 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
     private val adapter = MangaListAdapter()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_of_manga, container, false)
-
 
     }
 
@@ -53,6 +50,7 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
 
 
         //Первичная загрузка данных
+        //TODO чтобы при возвращении на экран данные не подгружались снова
         launch(Dispatchers.Default) {
             loadMangaList()
             gettingJob()
@@ -110,17 +108,8 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
     }
 
     private fun gettingJob(): Job {
-        job = launch {
-            showProgress(true)
-            adapter.set(listManga)
-            showProgress(false)
-        }
+        job = launch { adapter.set(listManga) }
         return job
-    }
-
-    private suspend fun showProgress(visibility: Boolean) {
-        if (visibility) pb.visibility = View.VISIBLE
-        if (!visibility) pb.visibility = View.GONE
     }
 
 }
