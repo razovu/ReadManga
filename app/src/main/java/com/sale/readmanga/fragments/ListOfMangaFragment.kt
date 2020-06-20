@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sale.readmanga.R
@@ -16,6 +17,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jsoup.Jsoup
 import kotlin.coroutines.CoroutineContext
 
@@ -23,12 +27,18 @@ import kotlin.coroutines.CoroutineContext
 //TODO реализовать множество recycler'ов с категориями + сортировка
 class ListOfMangaFragment : Fragment(), CoroutineScope {
 
+    companion object {
+        const val baseUrl: String = "https://readmanga.me"
+    }
+
+
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
-    val BASE_URL = "https://readmanga.me"
-    var offCount = 0
-    val listManga = mutableListOf<Manga>()
+
+    private var offCount = 0
+    private var offCountSearch = 0
+    private val listManga = mutableListOf<Manga>()
     private val adapter = MangaListAdapter()
 
     override fun onCreateView(
@@ -41,25 +51,76 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Кнопка поиска и ее анимация
-        searchbtn.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.searchbtn_anim))
-        }
 
         initRecyclerView()
-
+        searchRequest()
+        logoBtn.setOnClickListener {
+            listManga.clear()
+            offCount = 0
+            update()
+        }
 
         //Первичная загрузка данных
-        //TODO чтобы при возвращении на экран данные не подгружались снова
-        launch(Dispatchers.Default) {
-            loadMangaList()
-            gettingJob()
-            offCount += 70
-        }
+        if(listManga.isEmpty()) { update() }
 
 
     }
 
+    private fun searchRequest() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(queryString: String): Boolean {
+                offCountSearch = 0
+                launch(Dispatchers.Default) {
+                    searchManga(searchView.query.toString())
+                    gettingJob()
+                    offCountSearch += 50
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
+    }
+
+    private fun gettingJob(): Job {
+        job = launch { adapter.set(listManga) }
+        return job
+    }
+
+    private fun searchManga(query: String) {
+        val url = "https://readmanga.me/search"
+        val client = OkHttpClient()
+        val body = FormBody.Builder()
+            .add("q", query)
+            .add("offset", offCountSearch.toString())
+            .build()
+        val req = Request.Builder().url(url).post(body).build()
+        val response = client.newCall(req).execute()
+        val jj = Jsoup.parse(response.body?.string())
+
+
+        try {
+            val result = jj.selectFirst("#mangaResults").selectFirst("h3").text()
+            val element = jj.select("div[class=tile col-sm-6 ]")
+
+            showToast(result.substringBefore(")") + ")")
+            listManga.clear()
+            for (i in 0 until element.size) {
+
+                val ttl = element.select("img[src]").eq(i).attr("alt").substringBefore("(")
+                val linkImage = element.select("img[src]").eq(i).attr("data-original")
+                val linkManga = element.select("h3").select("a").eq(i).attr("href")
+                listManga.add(Manga(linkImage, ttl, linkManga))
+            }
+        } catch(e: NullPointerException) { showToast("Не найдено") }
+    }
+
+
+    private fun showToast(txt: String) {
+        launch(Dispatchers.Main) { Toast.makeText(activity, txt, Toast.LENGTH_LONG).show() }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -80,20 +141,14 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
 
 
         //Загрузка при прокрутке
-        rv_list_of_manga.addOnScrolledToEnd {
-            launch(Dispatchers.Default) {
-                loadMangaList()
-                gettingJob()
-                offCount += 70
-            }
-        }
+        rv_list_of_manga.addOnScrolledToEnd { update() }
     }
 
     //Парсинг данных в listManga
+    //TODO вынести весь парсинг в отдельный файл "ContentProvider"
     private fun loadMangaList() {
 
-        //https://readmanga.me/list?sortType=rate&offset=70
-        val url = "$BASE_URL/list?sortType=rate&offset=$offCount"
+        val url = "$baseUrl/list?sortType=rate&offset=$offCount"
         val doc = Jsoup.connect(url).get()
         val element = doc.select("div[class=tile col-sm-6 ]")
 
@@ -107,9 +162,13 @@ class ListOfMangaFragment : Fragment(), CoroutineScope {
 
     }
 
-    private fun gettingJob(): Job {
-        job = launch { adapter.set(listManga) }
-        return job
+    private fun update() {
+        launch(Dispatchers.Default) {
+            loadMangaList()
+            gettingJob()
+            offCount += 70
+        }
     }
+
 
 }

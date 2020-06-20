@@ -8,7 +8,7 @@
         android:indeterminateBehavior="cycle"
         android:layout_gravity="center"
         android:layout_width="60dp"
-        android:layout_height="60dp"/>
+        android:layout_height="60dp" />
 
 </FrameLayout>
 

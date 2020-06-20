@@ -15,7 +15,12 @@
             app:argType="string"
             android:defaultValue="link" />
 
+
         <action
+            app:enterAnim="@anim/frag_in_r"
+            app:exitAnim="@anim/frag_out_l"
+            app:popEnterAnim="@anim/frag_in_l"
+            app:popExitAnim="@anim/frag_out_r"
             android:id="@+id/action_mangaDescFragment_to_readThisFragment"
             app:destination="@id/readThisFragment" />
     </fragment>
@@ -26,11 +31,12 @@
         tools:layout="@layout/fragment_list_of_manga" >
 
         <action
+            app:enterAnim="@anim/frag_in_r"
+            app:exitAnim="@anim/frag_out_l"
+            app:popEnterAnim="@anim/frag_in_l"
+            app:popExitAnim="@anim/frag_out_r"
             android:id="@+id/action_listOfManga_to_mangaDescFragment"
             app:destination="@id/mangaDescFragment" />
-        <action
-            android:id="@+id/action_listOfManga_to_searchFragment"
-            app:destination="@id/searchFragment" />
         <action
             android:id="@+id/action_listOfManga_to_connectionProblemsFragment"
             app:destination="@id/connectionProblemsFragment" />
@@ -41,25 +47,28 @@
         android:label="fragment_read_this"
         tools:layout="@layout/fragment_read_manga" >
         <argument
+            android:name="mangaTitle"
+            app:argType="string"
+            android:defaultValue="mangaTitle" />
+        <argument
             android:name="chapterNum"
             app:argType="string"
             android:defaultValue="chapternum" />
         <argument
-            android:name="link"
+            android:name="chaptersUrls"
             app:argType="string"
-            android:defaultValue="link" />
+            android:defaultValue="someUrls" />
     </fragment>
+
     <fragment
+
         android:id="@+id/connectionProblemsFragment"
         android:name="com.sale.readmanga.fragments.ConnectionProblemsFragment"
         android:label="fragment_connection_problems"
         tools:layout="@layout/fragment_connection_problems" />
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.sale.readmanga.fragments.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+
     <activity
+
         android:id="@+id/mainActivity"
         android:name="com.sale.readmanga.MainActivity"
         android:label="activity_main"

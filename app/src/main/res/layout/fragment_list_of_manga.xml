@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,31 +11,37 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list_of_manga"
+        android:paddingTop="50dp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="8dp"
         android:saveEnabled="true"
         app:layout_anchorGravity="bottom"
-        tools:listitem="@layout/crd_view_item" />
-
+        tools:listitem="@layout/crd_view_item2"/>
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_margin="8dp"
+        android:id="@+id/toolBar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/searchbtn_bg">
+        android:layout_height="48dp"
+        android:background="@drawable/crd_view_bg"
+        app:layout_behavior=".noname.HideBtnOnScroll">
 
-        <TextView
-            android:id="@+id/searchbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/searchtxt"
-            android:layout_marginStart="48dp"
-            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Title"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorWhite"
-            android:gravity="center"/>
+        <ImageView
+            android:id="@+id/logoBtn"
+            android:layout_width="48dp"
+            android:layout_height="42dp"
+            android:src="@drawable/logo"/>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_marginEnd="50dp"
+            app:queryHint="@string/searchtxt"
+            app:iconifiedByDefault="true"
+            android:inputType="textLongMessage"
+            android:imeOptions="actionSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </androidx.appcompat.widget.Toolbar>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,21 +3,26 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/background_material_dark</item>
+
+        <item name="android:windowBackground" tools:ignore="PrivateResource">@color/background_material_dark</item>
+        <item name="colorAccent">@color/Blue</item>
+        <item name="android:textColorHint">@color/Blue</item>
         <item name="android:colorForeground">@color/foreground_material_dark</item>
         <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
         <item name="android:colorBackground">@color/background_material_dark</item>
         <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
         <item name="colorBackgroundFloating">@color/background_floating_material_dark</item>
-<!--        <item name="android:windowLightStatusBar">true</item>-->
-    </style>
-
-    <style name="CustomAppBarStyle" parent="Base.Widget.AppCompat.Light.ActionBar.TabText">
-        <item name="android:radius">5dp</item>
-        <item name="android:colorBackground">@color/colorAccent</item>
     </style>
 
 
+
+
+    <style name="CustomToolBarStyle" parent="Base.CardView">
+        <item name="elevation">6dp</item>
+        <item name="android:bottomRightRadius">6dp</item>
+        <item name="android:bottomLeftRadius">6dp</item>
+        <item name="android:background">@color/Blue</item>
+    </style>
 
     <style name="CustomAnimationButton" parent="@style/Widget.AppCompat.Button">
         <item name="colorButtonNormal">#1a237e</item>
@@ -33,7 +38,10 @@
     </style>
 
     <style name="AlertDialogCustom" parent="@android:style/Theme.Material.Dialog">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorSecondary">@android:color/white</item>
+        <item name="itemBackground">@drawable/crd_view_bg</item>
+        <item name="dialogCornerRadius">15dp</item>
 <!--        <item name="android:textColorLink">@android:color/white</item>-->
 <!--        <item name="android:textColorSecondary">@color/colorWhite</item>-->
 <!--        <item name="android:textColorAlertDialogListItem">@color/colorWhite</item>-->
@@ -73,7 +81,6 @@
         <item name="android:windowBackground">@color/colorWhite</item>
         <item name="android:backgroundTint">@color/colorWhite</item>
     </style>
-
 
 
 

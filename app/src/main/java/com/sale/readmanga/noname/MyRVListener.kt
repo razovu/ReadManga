@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 //Определеяем видимость последних элементов чтобы загрузить следующие данные
+//Скопировано StackOverFlow
 fun RecyclerView.addOnScrolledToEnd(onScrolledToEnd: () -> Unit) {
 
     this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -21,16 +22,18 @@ fun RecyclerView.addOnScrolledToEnd(onScrolledToEnd: () -> Unit) {
 
                 val visibleItemCount = childCount
                 val totalItemCount = itemCount
-                val firstVisibleItem = findLastVisibleItemPosition()
+                val lastVisible = findLastVisibleItemPosition()
 
+                //исключение бесконечного цикла
                 if (loading && totalItemCount > previousTotal) {
                     loading = false
                     previousTotal = totalItemCount
                 }
 
-                if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
+
+                if (!loading && (totalItemCount - visibleItemCount) <= (lastVisible + VISIBLE_THRESHOLD)) {
                     onScrolledToEnd()
-                    Log.e("TEST", "$firstVisibleItem")
+                    Log.e("TEST", "$lastVisible")
                     loading = true
                 }
             }
