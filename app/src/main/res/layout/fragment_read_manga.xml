@@ -3,37 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ReadMangaFragment">
 
-    <include
-        layout="@layout/item_progress_bar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"/>
-
-
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/viewPager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="56dp"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/nav_crdView"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_gravity="bottom"
-        android:backgroundTint="@color/Blue"
-        android:layout_margin="4dp"
-        app:cardCornerRadius="8dp">
+        android:layout_height="50dp"
+        android:backgroundTint="@color/Gray">
 
         <Button
             android:id="@+id/btnPrevVol"
-            android:text="Prev"
-            android:background="@drawable/searchbtn_bg"
-            android:layout_marginVertical="4dp"
-            android:layout_marginStart="6dp"
+            android:text="@string/prev_btn"
+            android:textColor="@color/Ash"
+            android:backgroundTint="@color/Glaze"
             android:layout_gravity="start|center_vertical"
             android:layout_width="100dp"
             android:layout_height="match_parent"/>
@@ -41,6 +22,7 @@
         <TextView
             android:id="@+id/pageCounter"
             android:textSize="22sp"
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:layout_width="100dp"
@@ -48,15 +30,40 @@
 
         <Button
             android:id="@+id/btnNextVol"
-            android:text="Next"
-            android:background="@drawable/searchbtn_bg"
-            android:layout_marginEnd="6dp"
-            android:layout_marginVertical="4dp"
+            android:text="@string/next_btn"
+            android:textColor="@color/Ash"
+            android:layout_marginEnd="14dp"
+            android:backgroundTint="@color/Glaze"
             android:layout_gravity="end|center_vertical"
             android:layout_width="100dp"
             android:layout_height="match_parent"/>
 
-    </androidx.cardview.widget.CardView>
+    </androidx.appcompat.widget.Toolbar>
+
+    <include
+        layout="@layout/item_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
+
+
+<androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewPager"
+    android:layout_marginTop="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/nav_crdView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:backgroundTint="@color/Blue"-->
+<!--        android:layout_margin="4dp"-->
+<!--        app:cardCornerRadius="8dp">-->
+
+
+<!--    </androidx.cardview.widget.CardView>-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

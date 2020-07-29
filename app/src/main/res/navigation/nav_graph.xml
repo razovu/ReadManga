@@ -14,33 +14,27 @@
             android:name="link"
             app:argType="string"
             android:defaultValue="link" />
-
-
         <action
-            app:enterAnim="@anim/frag_in_r"
-            app:exitAnim="@anim/frag_out_l"
-            app:popEnterAnim="@anim/frag_in_l"
-            app:popExitAnim="@anim/frag_out_r"
             android:id="@+id/action_mangaDescFragment_to_readThisFragment"
             app:destination="@id/readThisFragment" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="manga name" />
     </fragment>
+
     <fragment
         android:id="@+id/listOfManga"
-        android:name="com.sale.readmanga.fragments.ListOfMangaFragment"
+        android:name="com.sale.readmanga.fragments.ListMangaFragment"
         android:label="fragment_list_of_manga"
         tools:layout="@layout/fragment_list_of_manga" >
 
         <action
-            app:enterAnim="@anim/frag_in_r"
-            app:exitAnim="@anim/frag_out_l"
-            app:popEnterAnim="@anim/frag_in_l"
-            app:popExitAnim="@anim/frag_out_r"
             android:id="@+id/action_listOfManga_to_mangaDescFragment"
             app:destination="@id/mangaDescFragment" />
-        <action
-            android:id="@+id/action_listOfManga_to_connectionProblemsFragment"
-            app:destination="@id/connectionProblemsFragment" />
+
     </fragment>
+
     <fragment
         android:id="@+id/readThisFragment"
         android:name="com.sale.readmanga.fragments.ReadMangaFragment"
@@ -53,24 +47,64 @@
         <argument
             android:name="chapterNum"
             app:argType="string"
-            android:defaultValue="chapternum" />
+            android:defaultValue="Empty" />
         <argument
-            android:name="chaptersUrls"
-            app:argType="string"
-            android:defaultValue="someUrls" />
+            android:name="volList"
+            app:argType="com.sale.readmanga.data.MangaVolume[]" />
+        <argument
+            android:name="mangaImg"
+            app:argType="string" />
+        <argument
+            android:name="mangaLink"
+            app:argType="string" />
     </fragment>
 
     <fragment
 
-        android:id="@+id/connectionProblemsFragment"
-        android:name="com.sale.readmanga.fragments.ConnectionProblemsFragment"
-        android:label="fragment_connection_problems"
-        tools:layout="@layout/fragment_connection_problems" />
+        android:id="@+id/SearchFragment"
+        android:name="com.sale.readmanga.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_SearchFragment_to_mangaDescFragment"
+            app:destination="@id/mangaDescFragment" />
+    </fragment>
 
     <activity
 
         android:id="@+id/mainActivity"
-        android:name="com.sale.readmanga.MainActivity"
+        android:name="com.sale.readmanga.app.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
+
+    <fragment
+
+        android:id="@+id/HistoryFragment"
+        android:name="com.sale.readmanga.fragments.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_HistoryFragment_to_mangaDescFragment"
+            app:destination="@id/mangaDescFragment" />
+    </fragment>
+
+    <fragment
+
+        android:id="@+id/favoritesFragment"
+        android:name="com.sale.readmanga.fragments.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_mangaDescFragment"
+            app:destination="@id/mangaDescFragment" />
+    </fragment>
+
 </navigation>
+
+
+
+<!--
+app:enterAnim="@anim/frag_in_r"
+app:exitAnim="@anim/frag_out_l"
+app:popEnterAnim="@anim/frag_in_l"
+app:popExitAnim="@anim/frag_out_r" -->

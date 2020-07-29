@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FavoritesFragment">
+
+    <include layout="@layout/recycler_view"/>
+
+    <TextView
+        android:id="@+id/txt_empty_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/if_history_isempty"
+        android:textColor="@color/colorWhitish"
+        android:textSize="22sp"
+        />
+
+
+
+</FrameLayout>

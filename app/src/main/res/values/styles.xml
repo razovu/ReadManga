@@ -4,14 +4,18 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
 
-        <item name="android:windowBackground" tools:ignore="PrivateResource">@color/background_material_dark</item>
-        <item name="colorAccent">@color/Blue</item>
-        <item name="android:textColorHint">@color/Blue</item>
-        <item name="android:colorForeground">@color/foreground_material_dark</item>
-        <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
-        <item name="android:colorBackground">@color/background_material_dark</item>
-        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
-        <item name="colorBackgroundFloating">@color/background_floating_material_dark</item>
+        <item name="android:windowBackground">@color/Ash</item>
+        <item name="colorAccent">@color/Gold</item>
+        <item name="colorControlNormal">@color/Gold</item>
+        <item name="colorBackgroundFloating">@color/Gold</item>
+        <item name="colorPrimaryDark">@color/Ash</item>
+        <item name="colorPrimary">@color/Oatmeal</item>
+        <item name="colorSecondary">@color/Chocolate</item>
+        <item name="android:textColorHint">@color/Oatmeal</item>
+        <item name="android:textColor">@color/Oatmeal</item>
+        <item name="android:editTextColor">@color/Oatmeal</item>
+        <item name="android:colorBackground">@color/Ash</item>
+
     </style>
 
 
@@ -29,37 +33,23 @@
         <item name="colorControlHighlight">#673ab7</item>
     </style>
 
-    <style name="MyRatingBar.Small" parent="Base.Widget.AppCompat.RatingBar.Small">
-        <item name="android:progressDrawable">@drawable/abc_ratingbar_small_material</item>
-        <item name="android:indeterminateDrawable">@drawable/abc_ratingbar_small_material</item>
-        <item name="android:minHeight">10dip</item>
-        <item name="android:maxHeight">10dip</item>
-        <item name="android:isIndicator">true</item>
-    </style>
-
     <style name="AlertDialogCustom" parent="@android:style/Theme.Material.Dialog">
-        <item name="colorAccent">@android:color/white</item>
-        <item name="colorSecondary">@android:color/white</item>
-        <item name="itemBackground">@drawable/crd_view_bg</item>
-        <item name="dialogCornerRadius">15dp</item>
-<!--        <item name="android:textColorLink">@android:color/white</item>-->
-<!--        <item name="android:textColorSecondary">@color/colorWhite</item>-->
-<!--        <item name="android:textColorAlertDialogListItem">@color/colorWhite</item>-->
-<!--        <item name="android:textColorPrimary">@color/colorWhite</item>-->
-<!--        <item name="android:textColorTertiary">@color/colorWhite</item>-->
         <item name="android:headerDividersEnabled">true</item>
-        <item name="android:background">#3687C8</item>
+        <item name="android:background">@color/Chocolate</item>
     </style>
 
     <style name="ToolBarWithNavigationBack">
-        <item name="navigationIcon">@drawable/abc_ic_ab_back_material</item>
-        <item name="icon">@drawable/logo_r_m</item>
+        <item name="navigationIcon" tools:ignore="PrivateResource">@drawable/abc_ic_ab_back_material</item>
     </style>
 
     <style name="CollapsingTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title"/>
     <style name="CollapsingTextAppearance.Inverse" >
         <item name="android:textSize">30sp</item>
         <item name="android:layout_marginStart">10dp</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowRadius">15</item>
+        <item name="android:shadowColor">@android:color/black</item>
     </style>
 
     <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
@@ -74,14 +64,18 @@
     <style name="TextComponent.ItemRow">
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">48dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="ToolBarBetter" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:colorBackground">@color/Yellow</item>
-        <item name="android:windowBackground">@color/colorWhite</item>
-        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="android:colorBackground">@color/Gray</item>
+        <item name="android:windowBackground">@color/Gray</item>
+        <item name="android:backgroundTint">@color/Gray</item>
     </style>
 
+    <style name="Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/colorWhitish</item>
+    </style>
 
 
 </resources>

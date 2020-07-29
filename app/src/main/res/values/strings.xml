@@ -3,10 +3,91 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="connectionProblems">Ой, что-то пошло не так.\n Возможно проблемы с интернет соединением :(</string>
-    <string name="searchtxt">Поиск</string>
+    <string name="connection_problems">Ой, что-то пошло не так.\n Возможно проблемы с интернет соединением :(</string>
+    <string name="search">Поиск</string>
 
     <string name="loading">Загрузка…</string>
+
+    <string-array name="genres">
+        <item>Все Жанры</item>
+        <item>арт</item>
+        <item>боевик</item>
+        <item>боевые искусства</item>
+        <item>вампиры</item>
+        <item>гарем</item>
+        <item>гендерная интрига</item>
+        <item>героическое фэнтези</item>
+        <item>детектив</item>
+        <item>дзёсэй</item>
+        <item>додзинси</item>
+        <item>драма</item>
+        <item>игра</item>
+        <item>история</item>
+        <item>киберпанк</item>
+        <item>кодомо</item>
+        <item>комедия</item>
+        <item>махо-сёдзё</item>
+        <item>меха</item>
+        <item>научная фантастика</item>
+        <item>повседневность</item>
+        <item>постапокалиптика</item>
+        <item>приключения</item>
+        <item>психология</item>
+        <item>романтика</item>
+        <item>самурайский боевик</item>
+        <item>сверхъестественное</item>
+        <item>сёдзё</item>
+        <item>сёдзё-ай</item>
+        <item>сёнэн</item>
+        <item>сёнэн-ай</item>
+        <item>спорт</item>
+        <item>сэйнэн</item>
+        <item>трагедия</item>
+        <item>триллер</item>
+        <item>ужасы</item>
+        <item>фэнтези</item>
+        <item>школа</item>
+        <item>этти</item>
+        <item>юри</item>
+    </string-array>
+
+
+    <string-array name="filter">
+
+        <item>Все</item>
+        <item>Высокий рейтинг</item>
+        <item>Сингл</item>
+        <item>Для взрослых</item>
+        <item>Завершенная</item>
+        <item>Переведено</item>
+        <item>Длинная</item>
+        <item>Ожидает загрузки</item>
+
+    </string-array>
+
+    <string-array name="sort">
+
+        <item>По популярности</item>
+        <item>По алфавиту</item>
+        <item>По рейтингу</item>
+        <item>Новинки</item>
+        <item>По дате обновления</item>
+
+    </string-array>
+
+    <string-array name="categories">
+
+        <item>Все</item>
+        <item>Ёнкома</item>
+        <item>Комикс</item>
+        <item>Манхва</item>
+        <item>Маньхуа</item>
+        <item>В цвете</item>
+        <item>Веб</item>
+        <item>Выпуск приостановлен</item>
+
+    </string-array>
+
 
     <string name="lorem">
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -28,4 +109,35 @@
     <string name="mangainfo">Информация о манге</string>
     <string name="descTitle">Описание</string>
     <string name="readThisManga">Читать</string>
+
+    <string name="menu_favorites">Избранное</string>
+    <string name="menu_history">История</string>
+    <string name="menu_recommend">Актуальное</string>
+    <string name="menu_full_list">Список</string>
+    <string name="menu_search">Поиск</string>
+    <string name="volumes">Список глав</string>
+    <string name="ReadFirstVolume">Читать с первой главы</string>
+    <string name="ContinueReading">Продолжить чтение</string>
+    <string name="continueReadingShort">Продолжить</string>
+    <string name="if_history_isempty">Видимо здесь еще пусто. Вы знаете что делать :)</string>
+    <string name="in_favorites">Добавлено</string>
+    <string name="not_in_favorites">В избранное</string>
+    <string name="mangaimage">mangaImage</string>
+    <string name="was_red_last_time">Глава: </string>
+    <string name="vol_list_is_empty">Глав нет</string>
+    <string name="some_result_is_not_available">Некоторые результаты могут быть не доступны</string>
+    <string name="no_results">Видимо, ничего не найдено</string>
+    <string name="prev_btn">prev</string>
+    <string name="next_btn">next</string>
+    <string name="history_notification">Если вы прочитали только 1 главу, то ее не будет в истории</string>
+    <string name="network_notification">Нет соединения с сетью</string>
+    <string name="sort">Сортировать</string>
+    <string name="filter">Фильтровать</string>
+    <string name="categories">Категории</string>
+    <string name="other">Прочее</string>
+    <string name="filter_title">Фильтр</string>
+    <string name="apply">Применить</string>
+    <string name="cancel">Отмена</string>
+
+
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".app.MainActivity">
 
     <fragment
         android:id="@+id/fragment"
@@ -12,7 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/nav_graph"
+        android:layout_marginBottom="50dp"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bnv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorSecondary"
+        app:itemTextColor="@color/colorWhite"
+        app:menu="@menu/navigation_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemIconSize="22dp"
+        android:focusableInTouchMode="false"
+        app:itemIconTint="@drawable/bnv_item_colors"/>
 
 
 

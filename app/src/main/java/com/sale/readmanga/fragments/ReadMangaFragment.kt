@@ -1,184 +1,156 @@
 package com.sale.readmanga.fragments
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.github.piasy.biv.BigImageViewer
 import com.github.piasy.biv.loader.glide.GlideImageLoader
 import com.sale.readmanga.R
 import com.sale.readmanga.adapters.ReadMangaViewPagerAdapter
+import com.sale.readmanga.app.App
+import com.sale.readmanga.data.MangaHistory
+import com.sale.readmanga.data.MangaVolume
+import com.sale.readmanga.database.MangaHistoryDao
+import com.sale.readmanga.network.CheckConnection
+import com.sale.readmanga.network.SiteContent
 import kotlinx.android.synthetic.main.fragment_read_manga.*
+import kotlinx.android.synthetic.main.item_progress_bar.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.jsoup.Jsoup
-import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
-//TODO навигация << < pageNumber > >>
-class ReadMangaFragment : Fragment(), CoroutineScope {
 
-    private val imageList = mutableListOf<String>()
-    private val chaptersList = mutableListOf<String>()
+class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope {
 
-    private lateinit var sharedPref: SharedPreferences
-    private val mSettings = "SETTINGS"
+    private var imageList = mutableListOf<String>()
+
+    //Coroutines
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
-    private var mangaTitle: String =""
-    private var chaptersLine: String? = ""
-    private var chapterNum: Int = -1
-    private val baseUrl = ListOfMangaFragment.baseUrl
+    //Room
+    private lateinit var dbHistory: App
+    private lateinit var historyDao: MangaHistoryDao
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        sharedPref = requireActivity().getSharedPreferences(mSettings, Context.MODE_PRIVATE)
+    //args
+    private var networkManager = true
+    private var currentVol: Int = 0
+    private lateinit var mangaImg: String
+    private lateinit var mangaTitle: String
+    private lateinit var mangaLink: String
+    private lateinit var volList: Array<Parcelable>
+    private lateinit var currentMangaVol: MangaVolume
 
-        getArgs()
-        // Инициализация BigImageView
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //BigImageView
         BigImageViewer.initialize(GlideImageLoader.with(activity))
-        return inflater.inflate(R.layout.fragment_read_manga, container, false)
-    }
+
+        //Room
+        dbHistory = App.instance!!
+        historyDao = dbHistory.database?.historyDao()!!
+
+        //args
+        mangaTitle = arguments?.getString("mangaTitle").toString()
+        volList = arguments?.getParcelableArray("volList")!!
+        currentVol = arguments?.getString("chapterNum")?.toInt() ?: 0
+        mangaImg = arguments?.getString("mangaImg").toString()
+        mangaLink = arguments?.getString("mangaLink").toString()
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        pb_layout.visibility = View.VISIBLE
 
         //Парсим пикчи в BigImageView и заполняем ViewPager
-        launch(Dispatchers.Default) {
-            initBtmNav()
-            tryToParse()
+        update()
+
+        initVolumesNavigation()
+    }
+
+    private fun initVolumesNavigation() {
+        //помним, что currentVol это индекс в массиве, где 0 это первая глава
+        btnNextVol.setOnClickListener {
+            if (currentVol >= 0 && currentVol < volList.lastIndex) {
+                job.cancel()
+                currentVol++
+                update()
+            }
         }
-
-    }
-
-    //Получаем аргументы навигации
-    private fun getArgs() {
-
-        mangaTitle = arguments?.getString("mangaTitle").toString()
-
-        //Получаем стрингу с кучей ссылок и добавляем в list
-        chaptersLine = arguments?.getString("chaptersUrls")
-        chaptersLine?.split("\n")?.forEach { chaptersList.add(it) }
-
-        //Получаем индекс и составляем ссылку на главу. "?mtr=1" - подтверждение возрастных ограничений
-        chapterNum = arguments?.getString("chapterNum")!!.toInt().minus(1)
-
-
-    }
-
-    private fun initBtmNav() {
 
         btnPrevVol.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.btn_prev_anim))
+            if (currentVol > 0 && currentVol <= volList.lastIndex) {
+                job.cancel()
+                currentVol--
+                update()
 
-            if (chapterNum > 0) {
-                chapterNum++
-                sharedPref
-                    .edit()
-                    .clear()
-                    .putString(mangaTitle, chapterNum.plus(1).toString())
-                    .apply()
-
-                Log.e("sharedPref", sharedPref.getString(mangaTitle, "").toString())
-                launch(Dispatchers.Default) {
-                    tryToParse()
-                }
             }
         }
+    }
 
-        btnNextVol.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.btn_next_anim))
-
-            if (chapterNum > 0) {
-                chapterNum--
-                sharedPref
-                    .edit()
-                    .clear()
-                    .putString(mangaTitle, chapterNum.plus(1).toString())
-                    .apply()
-
-                Log.e("sharedPref", sharedPref.getString(mangaTitle, "").toString())
-
-                launch(Dispatchers.Default) {
-                    tryToParse()
-                }
+    private fun update() {
+        networkManager = CheckConnection.NetworkManager.isNetworkAvailable(activity)
+        if (networkManager){
+            job = launch(Dispatchers.Default) {
+                getChaptersLink()
+                historyEdit()
             }
         }
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
-    }
 
-    private fun tryToParse() {
-        try {
-            getChaptersLink()
-        } catch (e: IOException) {
-            Log.e("TEST", e.message.toString())
+    private fun historyEdit() {
+
+        val prevValue = historyDao.getByMangaName(mangaTitle) as MangaHistory
+        val newValue = "${currentVol}, ${prevValue.mangaHistory}"
+        val currentTime = System.currentTimeMillis().toString()
+        //Если в таблице не содержится значение конкретной главы(в нашем случае это индекс), то добавляем
+        if (!prevValue.mangaHistory.contains(currentVol.toString())) {
+            historyDao.update(MangaHistory(
+                mangaTitle, mangaImg, mangaLink, newValue, currentTime, currentMangaVol.volName)
+            )
         }
+        Log.e("historyDao", historyDao.getByMangaName(mangaTitle).toString())
     }
 
-    //Парсим данные? Пришлось добавить аннотацию, чтобы не бесил warning
-    @SuppressLint("SetTextI18n")
+
     private fun getChaptersLink() {
-
-        val chaptersUrl = baseUrl + chaptersList[chapterNum] + "?mtr=1"
-        val doc = Jsoup.connect(chaptersUrl).get()
-        val lineLinks = doc.data()
-            .substringAfter("rm_h.init( ")
-            .substringBefore(", 0, false);")
-            .replace("manga/", "")
-
-
+        currentMangaVol = volList[currentVol] as MangaVolume
+        var counterText = ""
         imageList.clear()
-        // Получили 3 эелемента (2 сервера и 1 ссылка на пикчу)
-        for (index in 0 until JSONArray(lineLinks).length()) {
-            val tempList = JSONArray(lineLinks).getJSONArray(index)
-            val link = tempList.get(0).toString() + tempList.get(2).toString()
+        imageList = SiteContent.loadMangaPages(currentMangaVol.volLink)
+        val vpAdapter = ReadMangaViewPagerAdapter(requireContext())
 
-            imageList.add(link)
-
-        }
-
-        //лютейший говнокод, но пока пусть будет так
-        //может быть убрать with{}?
-        //TODO вынести листенер в отдельный файл, по человечески
         job = launch {
             with(viewPager) {
                 removeAllViews()
-                offscreenPageLimit = 4
-                adapter = ReadMangaViewPagerAdapter(requireContext(), imageList)
-                pageCounter.text = "1 | ${imageList.size}"
+                offscreenPageLimit = 3
+                adapter = vpAdapter
+                vpAdapter.set(imageList)
+                counterText = "1 | ${imageList.size}"
+                pageCounter.text = counterText
                 addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
                     override fun onPageScrolled(pos: Int, posOffset: Float, posOffsetPx: Int) {}
                     override fun onPageScrollStateChanged(state: Int) {}
                     override fun onPageSelected(pos: Int) {
-                        pageCounter.text = "${pos + 1} | ${imageList.size}"
+                        counterText = "${pos + 1} | ${imageList.size}"
+                        pageCounter.text = counterText
                     }
                 })
             }
-
+            pb_layout.visibility = View.GONE
         }
+    }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
 }

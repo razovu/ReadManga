@@ -1,174 +1,218 @@
 package com.sale.readmanga.fragments
 
-import android.content.Context.MODE_PRIVATE
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.sale.readmanga.R
+import com.sale.readmanga.adapters.MangaVolumesRVAdapter
+import com.sale.readmanga.app.App
+import com.sale.readmanga.data.MangaHistory
+import com.sale.readmanga.data.MangaVolume
+import com.sale.readmanga.database.MangaHistoryDao
+import com.sale.readmanga.network.CheckConnection
+import com.sale.readmanga.network.SiteContent
 import kotlinx.android.synthetic.main.fragment_manga_desc.*
 import kotlinx.android.synthetic.main.item_progress_bar.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
+import kotlinx.android.synthetic.main.item_progress_bottom_bar.*
+import kotlinx.android.synthetic.main.item_recycler_volume.*
+import kotlinx.coroutines.*
+import java.net.SocketTimeoutException
 import kotlin.coroutines.CoroutineContext
 
 //TODO сохранить состояние этого фрагмента в onStop или OnDestroy
-class MangaDescriptionFragment : Fragment(), CoroutineScope {
+class MangaDescriptionFragment : Fragment(R.layout.fragment_manga_desc), CoroutineScope {
 
-    private val job: Job = Job()
+    //Coroutines
+    private var job: Job = Job()
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
+    //Room
+    private lateinit var thisTitle: MangaHistory
+    private lateinit var historyDao: MangaHistoryDao
+    private lateinit var dbHistory: App
 
-    private val mSettings = "SETTINGS"
-    private lateinit var sharedPref: SharedPreferences
-    private val chaptersUrls = mutableListOf<String>()
-    private val titleList = mutableListOf<String>()
-    private val baseUrl = ListOfMangaFragment.baseUrl
-    private var mangaTitle = "manga name"
-    private var mangaLink: String = ""
+    //args
+    private lateinit var mangaTitle: String
+    private lateinit var mangaLink: String
+    private lateinit var mangaImg: String
+    private lateinit var sharedPreferences: SharedPreferences
 
+    private val adapter = MangaVolumesRVAdapter()
+    private var historyList = mutableListOf<String>()
+    private var volList = mutableListOf<MangaVolume>()
+    private var networkManager = true
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        retainInstance = true
-        sharedPref = requireActivity().getSharedPreferences(mSettings, MODE_PRIVATE)
+        //shared preferences init
+        sharedPreferences = requireActivity().getSharedPreferences(
+            FavoritesFragment.FAVORITES,
+            Context.MODE_PRIVATE
+        )
+
+        //Room
+        dbHistory = App.instance!!
+        historyDao = dbHistory.database?.historyDao()!!
+
+        //Args
         mangaLink = arguments?.getString("link").toString()
+        mangaTitle = arguments?.getString("title").toString()
 
-        return inflater.inflate(R.layout.fragment_manga_desc, container, false)
-    }
+        //Recycler
+        fab_read.visibility = View.GONE
+        lv_vol.adapter = adapter
+        lv_vol.layoutManager = LinearLayoutManager(activity)
 
+        //Read first volume button
+        readFirstVol.setOnClickListener { navigateToReader("0") }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        //Favorites button
+        initFavoritesBtn()
 
-
-        launch(Dispatchers.Default) { getMangaDescription() }
-
-
-        //Кнопка "назад" в тулбаре
+        //Back button
         tlbr_desc.setNavigationOnClickListener { activity?.onBackPressed() }
 
-        //Кнопка "читать"
-        readbtn.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.searchbtn_anim))
-            basicAlert()
+        //update tables n network
+        goAhead()
+
+
+    }
+
+    private fun goAhead() = launch { launchDataLoad() }
+
+    private suspend fun launchDataLoad() {
+        networkManager = CheckConnection.NetworkManager.isNetworkAvailable(activity)
+        if (networkManager) {
+            try {
+                initHistoryDao()
+            } catch (e: SocketTimeoutException){
+                initHistoryDao()
+            }
+
+        } else {
+            delay(2000)
+            launchDataLoad()
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private suspend fun initHistoryDao() = withContext(Dispatchers.Default) {
+
+        //Пробуем извлечь данные с таблицы. Если таковой не существует, то ловим TypeCastException
+        try {
+            thisTitle = historyDao.getByMangaName(mangaTitle) as MangaHistory
+            if (thisTitle.mangaHistory != "0") {
+                initFabRead(thisTitle.mangaHistory.substringBefore(","))
+                historyList.addAll(thisTitle.mangaHistory.split(", "))
+            } else {
+                initFabRead("0")
+            }
+            setMangaDesc()
+
+        } catch (e: TypeCastException) {
+            setMangaDesc()
+            historyDao.insert(MangaHistory(mangaTitle, mangaImg, mangaLink, "0", ""))
+            initFabRead("0")
+            Log.e("room", "there is no such table")
+        }
 
     }
 
+    private fun initFavoritesBtn() {
 
-    //Диалоговое окно с выбором главы
-    private fun basicAlert() {
-        //Тк алерт билдер принимает только array<T> пришлось конвертнуть mutableList
-        //И заодно удалить название тайтла перед номером главы
+        if (sharedPreferences.contains(mangaTitle)) {
+            favoritesBtnStateChange(red = true)
+        } else {
+            favoritesBtnStateChange(red = false)
+        }
 
-
-        val builder = AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AlertDialogCustom))
-        val choiceArr = titleList
-            .map { it.substringAfter(mangaTitle).trim() }
-            .toList()
-            .toTypedArray()
-
-        with(builder) {
-            setTitle("Выбор главы")
-
-            // Сетим список глав и передаем ссылку выбранной главы
-            setItems(choiceArr) { dialog, which ->
-                sharedPref.edit().putString(mangaTitle, which.toString()).apply()
-                navigateToReader(which.toString())
+        btn_favorites.setOnClickListener {
+            if (btn_favorites.text != getText(R.string.in_favorites)) {
+                favoritesBtnStateChange(red = true)
+                sharedPreferences.edit().putString(mangaTitle, mangaTitle).apply()
+            } else {
+                favoritesBtnStateChange(red = false)
+                sharedPreferences.edit().remove(mangaTitle).apply()
             }
-
-            setPositiveButton("сначала") { dialog, which ->
-                navigateToReader(chaptersUrls.size.toString())
-            }
-
-            if (sharedPref.contains(mangaTitle)) {
-                setNeutralButton("Продолжить") { dialog, which ->
-                    val lastPicked = sharedPref.getString(mangaTitle, "last picked chapter")
-                    navigateToReader(lastPicked.toString())
-                }
-            }
-
-            setNegativeButton("Отмена") { dialog, which ->
-                Toast.makeText(activity, "OK", Toast.LENGTH_SHORT).show()
-            }
-
-            show()
         }
     }
 
+    private fun favoritesBtnStateChange(red: Boolean) {
+        if (red) {
+            btn_favorites.text = getText(R.string.in_favorites)
+            btn_favorites.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favorites_red, 0, 0)
+        } else {
+            btn_favorites.text = getText(R.string.not_in_favorites)
+            btn_favorites.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favorites, 0, 0)
+        }
+    }
 
-    private fun navigateToReader(selected: String) {
-        //Передаем в аргументы индекс выбранной главы и list ссылок.
-        //не знаю почему я не использовал ArrayOf<Strings>, так что я просто привел к стрингу
-        val action = MangaDescriptionFragmentDirections.actionMangaDescFragmentToReadThisFragment()
-        findNavController().navigate(
-            action
-                .setChapterNum(selected)
-                .setChaptersUrls(chaptersUrls.joinToString("\n"))
-                .setMangaTitle(mangaTitle)
+    private fun initFabRead(num: String) {
+
+        if (num.toInt() != 0) fab_read.text = getString(R.string.continueReadingShort)
+        fab_read.setOnClickListener { navigateToReader(num) }
+    }
+
+    private fun navigateToReader(volNum: String) {
+
+        val bundle: Bundle = bundleOf(
+            "volList" to volList.reversed().toTypedArray(),
+            "mangaLink" to mangaLink,
+            "mangaImg" to mangaImg,
+            "chapterNum" to volNum,
+            "mangaTitle" to mangaTitle
         )
+        if (volList.isNotEmpty()) findNavController().navigate(R.id.readThisFragment, bundle)
     }
-
 
     //Парсинг описания манги
-    private fun getMangaDescription() {
-        pb.visibility = ProgressBar.VISIBLE
-        val doc = Jsoup.connect(baseUrl + mangaLink).get()
-        val element = doc.select(".expandable")
+    private fun setMangaDesc() {
+        pb_layout.visibility = View.VISIBLE
 
-        val titleImg = element.select("img[src]").attr("src")
-        val descTxt = doc.selectFirst(".manga-description").text()
-        val itemsDesc = doc.select(".subject-meta.col-sm-7").select("p").eachText()
+        val listMangaInfo = SiteContent.loadMangaDescription(mangaLink)
+        mangaImg = listMangaInfo.mangaImg
 
-        //Название манги + извлечение списка глав в choiceList
-        mangaTitle = doc.selectFirst(".name").text()
-
-        //список глав
-        doc.select(".expandable.chapters-link")
-            .select("a[href]")
-            .forEach { titleList.add(it.text()) }
-
-        //список ссылок на главы
-        doc.select(".expandable.chapters-link")
-            .select("a")
-            .eachAttr("href")
-            .map { chaptersUrls.add(it.toString()) }
-
-
-//        val a = itemsDesc.map{ SpannableStringBuilder().bold { append(it.substringBefore(":")) } }
-//        //TODO выделить жирным шрифтом элементы описания
-
-        launch {
-            ctlbr_desc.title = mangaTitle
-            Glide.with(title_img_full)
-                .load(titleImg)
-                .into(title_img_full)
-            description_txt.text = descTxt
-            item_desc_txt.text = itemsDesc.joinToString("\n")
-            pb.visibility = ProgressBar.GONE
+        volList.clear()
+        volList = SiteContent.loadMangaVolumeList(mangaLink)
+        if (volList.isEmpty()) {
+            launch {
+                cv_vol.visibility = View.GONE
+                fab_read.text = getString(R.string.vol_list_is_empty)
+            }
         }
 
+        //inflate views
+        job = launch {
+
+            ctlbr_desc.title = listMangaInfo.mangaTitle
+            Glide.with(title_img_full)
+                .load(listMangaInfo.mangaImg)
+                .error(R.drawable.failure_img)
+                .into(title_img_full)
+            description_txt.text = listMangaInfo.mangaInfo
+            item_desc_txt.text = listMangaInfo.mangaDesc
+
+            adapter.set(volList, mangaTitle, mangaImg, mangaLink, historyList)
+
+            pb_layout.visibility = View.GONE
+            fab_read.visibility = View.VISIBLE
+            bottom_pb?.visibility = View.GONE
+        }
+
+
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
 
 }

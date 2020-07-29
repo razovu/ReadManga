@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_gravity="center"
+    android:layout_margin="36dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_marginStart="4dp"
+        android:textSize="12sp"
+        android:text="@string/filter"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"/>
+    <Spinner
+        android:layout_marginTop="4dp"
+        android:id="@+id/filter_spinner"
+        android:entries="@array/filter"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        />
+
+
+    <TextView
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="4dp"
+        android:textSize="12sp"
+        android:text="@string/sort"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"/>
+    <Spinner
+        android:id="@+id/sort_spinner"
+        android:entries="@array/sort"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        />
+
+
+    <TextView
+        android:layout_marginTop="94dp"
+        android:layout_marginStart="4dp"
+        android:textSize="12sp"
+        android:text="@string/categories"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"/>
+    <Spinner
+        android:id="@+id/categories_spinner"
+        android:entries="@array/categories"
+        android:layout_marginTop="94dp"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        />
+
+
+</FrameLayout>

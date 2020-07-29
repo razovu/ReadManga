@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_margin="8dp">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_gravity="top"
+            android:id="@+id/txt_time"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="68dp"
+            android:text="@string/readThisManga"
+            android:textColor="@color/Yellow" />
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="68dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/app_name"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/txt_last_vol"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="68dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginBottom="4dp"
+            android:text="@string/readThisManga"
+            android:textColor="@color/colorWhitish" />
+
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/GrayLight"
+            android:maxHeight="280dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <ImageView
+                android:id="@+id/title_img"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:background="@drawable/img_rounded"
+                android:contentDescription="@string/mangaimage"
+                android:scaleType="centerCrop"
+                android:src="@color/colorAccent" />
+
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+</FrameLayout>

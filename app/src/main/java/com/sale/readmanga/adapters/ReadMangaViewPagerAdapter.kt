@@ -8,11 +8,11 @@ import androidx.viewpager.widget.PagerAdapter
 import com.github.piasy.biv.BigImageViewer
 import com.github.piasy.biv.view.BigImageView
 import com.sale.readmanga.R
+import com.sale.readmanga.tools.ProgressIndicatorForBIV
 
-class ReadMangaViewPagerAdapter(
-    private val context: Context,
-    private val imgList: MutableList<String>
-    ) : PagerAdapter() {
+class ReadMangaViewPagerAdapter(private val context: Context) : PagerAdapter() {
+
+    private val imgList = mutableListOf<String>()
 
     init {
         for (url in imgList)
@@ -28,21 +28,28 @@ class ReadMangaViewPagerAdapter(
         return imgList.size
     }
 
+    fun set(list: MutableList<String>) {
+        this.imgList.clear()
+        this.imgList.addAll(list)
+        this.notifyDataSetChanged()
+    }
+
+
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        synchronized(ReadMangaViewPagerAdapter::class) {
 
-            val imgView = BigImageView(context)
-            with(imgView) {
-                setFailureImage(resources.getDrawable(R.drawable.squidward))
-                setOptimizeDisplay(true)
-                setTapToRetry(true)
-                showImage(Uri.parse(imgList[position]))
-            }
-
-            container.addView(imgView)
-
-            return imgView
+        val imgView = BigImageView(context)
+        with(imgView) {
+            setFailureImage(resources.getDrawable(R.drawable.failure_icon))
+            setOptimizeDisplay(true)
+            setTapToRetry(true)
+            setProgressIndicator(ProgressIndicatorForBIV())
+            showImage(Uri.parse(imgList[position]))
         }
+
+        container.addView(imgView)
+
+        return imgView
+
     }
 
 

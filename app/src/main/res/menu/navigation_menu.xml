@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/listOfManga"
+        android:title="@string/menu_full_list"
+        android:icon="@drawable/full_list" />
+
+    <item android:id="@+id/SearchFragment"
+        android:title="@string/menu_search"
+        android:icon="@drawable/icon_search" />
+
+    <item android:id="@+id/favoritesFragment"
+        android:title="@string/menu_favorites"
+        android:icon="@drawable/favorites" />
+
+    <item android:id="@+id/HistoryFragment"
+        android:title="@string/menu_history"
+        android:icon="@drawable/history" />
+
+</menu>
