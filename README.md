@@ -1,1 +1,1 @@
-# ReadManga just client of readmanga.me
+#Client of readmanga.live
