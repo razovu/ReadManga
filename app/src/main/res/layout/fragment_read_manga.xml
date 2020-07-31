@@ -1,69 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reader_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ReadMangaFragment">
-
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/Gray">
-
-        <Button
-            android:id="@+id/btnPrevVol"
-            android:text="@string/prev_btn"
-            android:textColor="@color/Ash"
-            android:backgroundTint="@color/Glaze"
-            android:layout_gravity="start|center_vertical"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/pageCounter"
-            android:textSize="22sp"
-            android:textColor="@color/colorWhite"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnNextVol"
-            android:text="@string/next_btn"
-            android:textColor="@color/Ash"
-            android:layout_marginEnd="14dp"
-            android:backgroundTint="@color/Glaze"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"/>
-
-    </androidx.appcompat.widget.Toolbar>
+    android:clickable="true"
+    tools:context=".fragments.ReadMangaFragment"
+    android:focusable="true">
 
     <include
         layout="@layout/item_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
 
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/viewPager"
-    android:layout_marginTop="50dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/nav_crdView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="52dp"-->
-<!--        android:layout_gravity="bottom"-->
-<!--        android:backgroundTint="@color/Blue"-->
-<!--        android:layout_margin="4dp"-->
-<!--        app:cardCornerRadius="8dp">-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/reader_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/Darker">
 
+        <Button
+            android:id="@+id/btnPrevVol"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:backgroundTint="@color/Glaze"
+            android:text="@string/prev_btn"
+            android:textColor="@color/Ash" />
 
-<!--    </androidx.cardview.widget.CardView>-->
+        <TextView
+            android:id="@+id/pageCounter"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btnNextVol"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="14dp"
+            android:backgroundTint="@color/Glaze"
+            android:text="@string/next_btn"
+            android:textColor="@color/Ash" />
+
+    </androidx.appcompat.widget.Toolbar>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

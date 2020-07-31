@@ -1,5 +1,6 @@
 package com.sale.readmanga.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -46,11 +47,18 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
     private lateinit var volList: Array<Parcelable>
     private lateinit var currentMangaVol: MangaVolume
 
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //BigImageView
         BigImageViewer.initialize(GlideImageLoader.with(activity))
+        
+        reader_layout.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
 
         //Room
         dbHistory = App.instance!!
@@ -71,6 +79,7 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
 
         initVolumesNavigation()
     }
+
 
     private fun initVolumesNavigation() {
         //помним, что currentVol это индекс в массиве, где 0 это первая глава
@@ -94,7 +103,7 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
 
     private fun update() {
         networkManager = CheckConnection.NetworkManager.isNetworkAvailable(activity)
-        if (networkManager){
+        if (networkManager) {
             job = launch(Dispatchers.Default) {
                 getChaptersLink()
                 historyEdit()
@@ -111,8 +120,10 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
         val currentTime = System.currentTimeMillis().toString()
         //Если в таблице не содержится значение конкретной главы(в нашем случае это индекс), то добавляем
         if (!prevValue.mangaHistory.contains(currentVol.toString())) {
-            historyDao.update(MangaHistory(
-                mangaTitle, mangaImg, mangaLink, newValue, currentTime, currentMangaVol.volName)
+            historyDao.update(
+                MangaHistory(
+                    mangaTitle, mangaImg, mangaLink, newValue, currentTime, currentMangaVol.volName
+                )
             )
         }
         Log.e("historyDao", historyDao.getByMangaName(mangaTitle).toString())

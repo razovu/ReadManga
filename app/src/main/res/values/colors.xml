@@ -13,6 +13,7 @@
     <color name="LightRed">#FF3333</color>
     <color name="Gray">#FF303030</color>
     <color name="GrayLight">#434242</color>
+    <color name="AshLight">#3A3838</color>
 
     <color name="Cacao">#301B28</color>
     <color name="Chocolate">#523634</color>
@@ -23,6 +24,7 @@
     <color name="Oatmeal">#cdbea7</color>
     <color name="Ash">#323030</color>
     <color name="Gold">#c29545</color>
+    <color name="black_overlay">#66000000</color>
 
 
 </resources>

@@ -1,5 +1,6 @@
 package com.sale.readmanga.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.view.View
@@ -14,7 +15,9 @@ class ReadMangaViewPagerAdapter(private val context: Context) : PagerAdapter() {
 
     private val imgList = mutableListOf<String>()
 
+
     init {
+
         for (url in imgList)
             BigImageViewer.prefetch(Uri.parse(url))
     }
@@ -35,6 +38,8 @@ class ReadMangaViewPagerAdapter(private val context: Context) : PagerAdapter() {
     }
 
 
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
         val imgView = BigImageView(context)
