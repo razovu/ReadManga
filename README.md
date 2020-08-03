@@ -4,13 +4,13 @@
 <img src="https://github.com/razovu/ReadManga/blob/master/readmanga_demo.gif" href="" height="500">
 
 
-***Readmanga owners*** gave their approval to create this app and they does not have an ***API***
+***Readmanga owners*** gave their approval to create this app and they do not have an ***API***
 
 For fetch data from this site i used **okhttp** and **jsoup.**
 
 ---
 
-*So i used this libraries for this app:*
+*used libraries for this app:*
 
 - Room
 - Jsoup
