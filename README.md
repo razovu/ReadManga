@@ -3,9 +3,6 @@
 <p align="left">
 <img src="https://github.com/razovu/ReadManga/blob/master/readmanga_demo.gif" href="" height="500">
 
-
-***Readmanga owners*** gave their approval to create this app and they do not have an ***API***
-
 For fetch data from this site i used **okhttp** and **jsoup.**
 
 ---
@@ -28,5 +25,6 @@ For fetch data from this site i used **okhttp** and **jsoup.**
 + [ ] Import *favorites* from Readmanga.live
 + [ ] Offline mode
 + [ ] Refactor to MVVM pattern
++ [ ] Migrate to ViewPager2
 + [ ] (endless) Fix the bugs and something like that
 

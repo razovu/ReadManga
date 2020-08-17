@@ -17,7 +17,6 @@ class ReadMangaViewPagerAdapter(private val context: Context) : PagerAdapter() {
 
 
     init {
-
         for (url in imgList)
             BigImageViewer.prefetch(Uri.parse(url))
     }

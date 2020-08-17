@@ -17,6 +17,7 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
+        android:animateLayoutChanges="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -32,9 +33,9 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
-            android:backgroundTint="@color/Glaze"
+            android:backgroundTint="@color/DarkImgView"
             android:text="@string/prev_btn"
-            android:textColor="@color/Ash" />
+            android:textColor="@color/Oatmeal" />
 
         <TextView
             android:id="@+id/pageCounter"
@@ -51,9 +52,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="14dp"
-            android:backgroundTint="@color/Glaze"
+            android:backgroundTint="@color/DarkImgView"
             android:text="@string/next_btn"
-            android:textColor="@color/Ash" />
+            android:textColor="@color/Oatmeal" />
 
     </androidx.appcompat.widget.Toolbar>
 

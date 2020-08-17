@@ -45,11 +45,14 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
         initRecyclerView()
 
         //Первичная загрузка данных
-        if(listManga.isEmpty()) { goAhead() } else bottom_pb?.visibility = View.GONE
+        if(adapter.itemCount == 0) { goAhead() } else bottom_pb?.visibility = View.GONE
 
         sort_btn.setOnClickListener { dialogFilter() }
 
-        swipeContainer.setOnRefreshListener { goAhead() }
+        swipeContainer.setOnRefreshListener {
+            listManga.clear()
+            goAhead()
+        }
 
         //spinner genres????
         genres_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -66,6 +69,8 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
         }
 
     }
+
+    private fun goAhead() = launch { launchDataLoad() }
 
     private fun dialogFilter(){
         val nullParent: ViewGroup? = null
@@ -89,7 +94,6 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
         builder.show()
     }
 
-
     // RecyclerView
     private fun initRecyclerView() {
         //Определение ширины экрана и подсчета колонн
@@ -101,8 +105,6 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
         rv_list_of_manga.layoutManager = mLayoutManager
         rv_list_of_manga.addOnScrolledToEnd { goAhead() }
     }
-
-    private fun goAhead() = launch { launchDataLoad() }
 
     private suspend fun bottomProgressBar(show: Boolean?) = withContext(Dispatchers.Main) {
         when(show) {
@@ -125,7 +127,7 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
         networkManager = CheckConnection.NetworkManager.isNetworkAvailable(activity)
         if (networkManager) {
             bottomProgressBar(show = true)
-            update()
+            updateList()
         } else {
             bottomProgressBar(show = null)
             delay(2000)
@@ -134,7 +136,7 @@ class ListMangaFragment : Fragment(R.layout.fragment_list_of_manga), CoroutineSc
 
     }
 
-    private suspend fun update() = withContext(Dispatchers.Default)  {
+    private suspend fun updateList() = withContext(Dispatchers.Default)  {
 
         try {
             listManga.addAll(SiteContent.loadMangaList("$url&offset=$paramOffset"))

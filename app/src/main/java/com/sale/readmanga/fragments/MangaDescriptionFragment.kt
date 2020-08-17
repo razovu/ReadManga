@@ -26,7 +26,6 @@ import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
 import kotlin.coroutines.CoroutineContext
 
-//TODO сохранить состояние этого фрагмента в onStop или OnDestroy
 class MangaDescriptionFragment : Fragment(R.layout.fragment_manga_desc), CoroutineScope {
 
     //Coroutines

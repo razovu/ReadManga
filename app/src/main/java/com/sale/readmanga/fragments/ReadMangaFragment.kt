@@ -1,6 +1,5 @@
 package com.sale.readmanga.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -48,17 +47,11 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
     private lateinit var currentMangaVol: MangaVolume
 
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //BigImageView
         BigImageViewer.initialize(GlideImageLoader.with(activity))
-        
-        reader_layout.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-
 
         //Room
         dbHistory = App.instance!!
@@ -71,15 +64,11 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
         mangaImg = arguments?.getString("mangaImg").toString()
         mangaLink = arguments?.getString("mangaLink").toString()
 
-
-        pb_layout.visibility = View.VISIBLE
-
         //Парсим пикчи в BigImageView и заполняем ViewPager
         update()
 
         initVolumesNavigation()
     }
-
 
     private fun initVolumesNavigation() {
         //помним, что currentVol это индекс в массиве, где 0 это первая глава
@@ -102,6 +91,7 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
     }
 
     private fun update() {
+        pb_layout.visibility = View.VISIBLE
         networkManager = CheckConnection.NetworkManager.isNetworkAvailable(activity)
         if (networkManager) {
             job = launch(Dispatchers.Default) {
@@ -110,7 +100,6 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
             }
         }
     }
-
 
 
     private fun historyEdit() {
@@ -129,32 +118,31 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga), CoroutineScope
         Log.e("historyDao", historyDao.getByMangaName(mangaTitle).toString())
     }
 
-
+    
     private fun getChaptersLink() {
         currentMangaVol = volList[currentVol] as MangaVolume
-        var counterText = ""
         imageList.clear()
         imageList = SiteContent.loadMangaPages(currentMangaVol.volLink)
         val vpAdapter = ReadMangaViewPagerAdapter(requireContext())
+        var counterText = "1 | ${imageList.size}"
 
         job = launch {
-            with(viewPager) {
-                removeAllViews()
-                offscreenPageLimit = 3
-                adapter = vpAdapter
-                vpAdapter.set(imageList)
-                counterText = "1 | ${imageList.size}"
-                pageCounter.text = counterText
-                addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            viewPager.adapter = vpAdapter
+            viewPager.removeAllViews()
+            viewPager.offscreenPageLimit = 3
+            viewPager.adapter = vpAdapter
+            vpAdapter.set(imageList)
+            pageCounter.text = counterText
+            viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
-                    override fun onPageScrolled(pos: Int, posOffset: Float, posOffsetPx: Int) {}
-                    override fun onPageScrollStateChanged(state: Int) {}
-                    override fun onPageSelected(pos: Int) {
-                        counterText = "${pos + 1} | ${imageList.size}"
-                        pageCounter.text = counterText
-                    }
-                })
-            }
+                override fun onPageScrolled(pos: Int, posOffset: Float, posOffsetPx: Int) {}
+                override fun onPageScrollStateChanged(state: Int) {}
+                override fun onPageSelected(pos: Int) {
+                    counterText = "${pos + 1} | ${imageList.size}"
+                    pageCounter.text = counterText
+                }
+            })
+
             pb_layout.visibility = View.GONE
         }
     }

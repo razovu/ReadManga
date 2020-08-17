@@ -5,6 +5,7 @@
     android:id="@+id/coordinator_desc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
     tools:ignore="RtlHardcoded">
 
     <Button
@@ -35,6 +36,7 @@
             app:expandedTitleTextAppearance="@style/CollapsingTextAppearance.Inverse"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="Ждем...">
+
 
             <ImageView
                 android:id="@+id/title_img_full"

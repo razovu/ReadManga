@@ -8,6 +8,7 @@
     <color name="Yellow">#D3A315</color>
     <color name="BlackWithOpacity">#A3000000</color>
     <color name="Darker">#72000000</color>
+    <color name="DarkImgView">#B2000000</color>
     <color name="Blue">#3687C8</color>
     <color name="LightBlue">#47ADFF</color>
     <color name="LightRed">#FF3333</color>
