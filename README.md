@@ -20,11 +20,5 @@ For fetch data from this site i used **okhttp** and **jsoup.**
 
 ## //todo
 
-+ [ ] Fullscreen mode for reader
-+ [ ] Login form for Readmanga users
-+ [ ] Import *favorites* from Readmanga.live
-+ [ ] Offline mode
-+ [ ] Refactor to MVVM pattern
-+ [ ] Migrate to ViewPager2
-+ [ ] (endless) Fix the bugs and something like that
+Переписать весь код, чтобы хотябы выглядело solidно
 
